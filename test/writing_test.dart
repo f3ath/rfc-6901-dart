@@ -14,8 +14,8 @@ void main() {
     test('write on primitive throws InvalidRoute', () {
       expect(
           () => JsonPointer('/0').write('foo', 'bar'),
-          throwsA(predicate((e) =>
-              e is BadRoute && e.toString() == 'No value found at /0')));
+          throwsA(predicate(
+              (e) => e is BadRoute && e.toString() == 'No value found at /0')));
     });
 
     test('adding a key fails at arrays', () {
@@ -66,8 +66,7 @@ void main() {
       expect(
           () => JsonPointer('/foo/3/bar').write(document, 'banana'),
           throwsA(predicate((e) =>
-              e is BadRoute &&
-              e.toString() == 'No value found at /foo/3')));
+              e is BadRoute && e.toString() == 'No value found at /foo/3')));
     });
   });
 }

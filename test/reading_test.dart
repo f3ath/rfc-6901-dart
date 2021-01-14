@@ -39,8 +39,7 @@ void main() {
       expect(
           () => JsonPointer('/foo/01/bar').read(document),
           throwsA(predicate((e) =>
-              e is BadRoute &&
-              e.toString() == 'No value found at /foo/01')));
+              e is BadRoute && e.toString() == 'No value found at /foo/01')));
     });
     test('special chars', () {
       final doc = {
