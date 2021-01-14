@@ -1,0 +1,1 @@
+typedef Producer = Object? Function();
