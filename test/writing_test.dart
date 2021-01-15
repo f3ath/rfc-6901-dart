@@ -50,6 +50,11 @@ void main() {
       expect(JsonPointer('/-/foo').read(document), 'banana');
     });
 
+    test('"-" at the end adds a new member to an object', () {
+      JsonPointer('/-').write(document, 'banana');
+      expect(JsonPointer('/-').read(document), 'banana');
+    });
+
     test('/foo/- on {}', () {
       final doc = {};
       JsonPointer('/foo/-').write(doc, 'banana');
@@ -80,7 +85,7 @@ void main() {
       expect(JsonPointer('/0/0/0/bar').read(doc), 'banana');
     });
 
-    test('/foo/-/bar/baz  on "" throws', () {
+    test('/foo/-/bar/baz on "" throws', () {
       final doc = '';
       expect(() => JsonPointer('/foo/-/bar/baz').write(doc, 'banana'),
           throwsA((e) => e is BadRoute));
