@@ -6,6 +6,7 @@ Features:
 - Fully implements the standard, including the `-` character
 - Can build an entire path, e.g. `/foo/bar/-/baz`
 - No external dependencies
+- 100% test coverage
 
 ## Constructing pointers
 A JSON Pointer object can be parsed from a string expression. 
