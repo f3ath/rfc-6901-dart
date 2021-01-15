@@ -28,19 +28,21 @@ class ArrayIndex extends ObjectMember {
   }
 
   @override
-  void write(Object? node, Object? value) {
-    if (node is List && _applicableTo(node)) {
-      node[index] = value;
+  void write(Object? document, Object? value) {
+    if (document is List && _applicableTo(document)) {
+      document[index] = value;
     } else {
-      super.write(node, value);
+      super.write(document, value);
     }
   }
 
   @override
-  List createEmptyDocument() => [];
-
-  @override
-  Object? readOrCreate(Object? document, Producer producer) => read(document);
+  Object? readOrCreate(Object? document, Producer producer) {
+    if (document is List && _applicableTo(document)) {
+      return document[index];
+    }
+    return super.readOrCreate(document, producer);
+  }
 
   bool _applicableTo(List document) => index >= 0 && index < document.length;
 }

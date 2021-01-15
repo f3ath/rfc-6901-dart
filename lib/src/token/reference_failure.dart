@@ -8,7 +8,4 @@ class ReferenceFailure implements Exception {
   final ReferenceToken reference;
 
   final Object? document;
-
-  @override
-  String toString() => 'No value is referenced by $reference';
 }
