@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:rfc_6901/json_pointer.dart';
+import 'package:rfc_6901/rfc_6901.dart';
 
 void main() {
   const json = '{"foo": [{"bar": 42}]}';

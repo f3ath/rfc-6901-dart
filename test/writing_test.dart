@@ -1,7 +1,6 @@
 import 'dart:convert';
 
-import 'package:rfc_6901/json_pointer.dart';
-import 'package:rfc_6901/src/bad_route.dart';
+import 'package:rfc_6901/rfc_6901.dart';
 import 'package:test/test.dart';
 
 void main() {

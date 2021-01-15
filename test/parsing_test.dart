@@ -1,4 +1,4 @@
-import 'package:rfc_6901/json_pointer.dart';
+import 'package:rfc_6901/rfc_6901.dart';
 import 'package:test/test.dart';
 
 void main() {

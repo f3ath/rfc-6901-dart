@@ -1,4 +1,4 @@
-import 'package:rfc_6901/json_pointer.dart';
+import 'package:rfc_6901/src/json_pointer.dart';
 
 class BadRoute implements Exception {
   BadRoute(this.pointer);
