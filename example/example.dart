@@ -15,21 +15,12 @@ void main() {
     print('Pointer "$pointer" reads ${pointer.read(document)}');
   });
 
-  // Let's replace 42 with 'hello'
-  final bar = JsonPointer('/foo/0/bar');
-  bar.write(document, 'hello');
-  // The document is {foo: [{bar: hello}]}
-  print('Pointer "$bar" can replace 42 with "hello": $document');
-
-  // Now let's add a new element to the array
-  final newElement = JsonPointer('/foo/-');
-  newElement.write(document, 'banana');
-  // The document is {foo: [{bar: hello}, banana]}
-  print('Pointer "$newElement" adds a banana: $document');
-
-  // Now let's add an entire path to the document
-  final longPath = JsonPointer('/a/b/-/c/d');
-  longPath.write(document, 'wow');
-  // The document is {foo: [{bar: hello}, banana], a: {b: [{c: {d: wow}}]}}
-  print('Pointer "$longPath" creates a new path: $document');
+  [
+    '/foo/0/bar', // {foo: [{bar: banana}]}
+    '/foo/-', // {foo: [{bar: 42}, banana]}
+    '/a/b/-/c/d', // {foo: [{bar: 42}], a: {b: [{c: {d: banana}}]}}
+  ].map((expression) => JsonPointer(expression)).forEach((pointer) {
+    final d = pointer.write(document, 'banana');
+    print('Add a banana at "$pointer": $d');
+  });
 }

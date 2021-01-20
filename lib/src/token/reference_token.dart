@@ -1,7 +1,6 @@
 import 'package:rfc_6901/src/token/array_index.dart';
 import 'package:rfc_6901/src/token/new_element.dart';
-import 'package:rfc_6901/src/object_member.dart';
-import 'package:rfc_6901/src/producer.dart';
+import 'package:rfc_6901/src/token/object_member.dart';
 import 'package:rfc_6901/src/token/reference_failure.dart';
 
 /// A single JSON Pointer reference token
@@ -24,17 +23,26 @@ abstract class ReferenceToken {
   /// If no value is referenced, throws [ReferenceFailure].
   Object? read(document);
 
-  /// Sets the referenced value in the [document] to the [newValue].
+  /// Returns a copy of the [document] with the referenced value set to [newValue].
   /// When a non-existing [Map] (JSON Object) key is referred, it will be added to the map.
   /// When a new index in a [List] (JSON Array) is referred, it will be appended to the list.
   /// Otherwise throws [ReferenceFailure].
-  void write(document, newValue);
+  Object? write(Object? document, Object? newValue);
 
-  /// Reads the referenced value from the [document].
-  /// If no value is referenced, and a new value can be created,
-  /// sets the value created by [producer] and returns it.
+  /// Returns a copy of the [document] with the referenced value set to [newValue].
+  /// When a non-existing [Map] (JSON Object) key is referred, it will be added to the map.
+  /// When an existing index in a [List] (JSON Array) is referred,
+  /// it will be set to [newValue] and existing elements at or above the index will be shifted to the right.
+  /// When a new index in a [List] (JSON Array) is referred ("-"), it will be appended to the list.
   /// Otherwise throws [ReferenceFailure].
-  Object? readOrCreate(document, Producer producer);
+  Object? add(Object? document, Object? newValue);
+
+  /// Returns a copy of the [document] with the referenced value removed.
+  /// When an existing [Map] (JSON Object) key is referred, it will be added removed from the map.
+  /// When an existing index in a [List] (JSON Array) is referred,
+  /// it will be removed and the elements above the index will be shifted to the left.
+  /// Otherwise throws [ReferenceFailure].
+  Object? remove(Object? document);
 
   /// Creates an empty document for which this reference is applicable.
   Object createEmptyDocument();

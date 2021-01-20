@@ -1,5 +1,4 @@
-import 'package:rfc_6901/src/object_member.dart';
-import 'package:rfc_6901/src/producer.dart';
+import 'package:rfc_6901/src/token/object_member.dart';
 
 /// A reference to a value in a List or Map
 class ArrayIndex extends ObjectMember {
@@ -28,20 +27,27 @@ class ArrayIndex extends ObjectMember {
   }
 
   @override
-  void write(Object? document, Object? value) {
+  Object? write(Object? document, Object? value) {
     if (document is List && _applicableTo(document)) {
-      document[index] = value;
-    } else {
-      super.write(document, value);
+      return [...document]..[index] = value;
     }
+    return super.write(document, value);
   }
 
   @override
-  Object? readOrCreate(Object? document, Producer producer) {
+  Object? add(Object? document, Object? value) {
     if (document is List && _applicableTo(document)) {
-      return document[index];
+      return [...document]..insert(index, value);
     }
-    return super.readOrCreate(document, producer);
+    return super.add(document, value);
+  }
+
+  @override
+  Object? remove(Object? document) {
+    if (document is List && _applicableTo(document)) {
+      return [...document]..removeAt(index);
+    }
+    return super.remove(document);
   }
 
   bool _applicableTo(List document) => index >= 0 && index < document.length;

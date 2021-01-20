@@ -3,18 +3,16 @@ import 'package:test/test.dart';
 
 void main() {
   group('Building', () {
-    test('field', () {
-      expect(JsonPointer.build('foo').toString(), '/foo');
-    });
-    test('/', () {
-      expect(JsonPointer.build('/').toString(), '/~1');
-    });
-    test('~', () {
-      expect(JsonPointer.build('~').toString(), '/~0');
-    });
-    test('/ + ~ +foo + "" + ~0 + 0', () {
-      expect(JsonPointer.build('/', ['~', 'foo', '', '~0', '0']).toString(),
-          '/~1/~0/foo//~00/0');
+    <Iterable<String>, String>{
+      []: '',
+      ['foo']: '/foo',
+      ['/']: '/~1',
+      ['~']: '/~0',
+      ['/', '~', 'foo', '', '~0', '0']: '/~1/~0/foo//~00/0',
+    }.forEach((k, v) {
+      test('$k => "$v"', () {
+        expect(JsonPointer.build(k).toString(), v);
+      });
     });
   });
 }

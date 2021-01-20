@@ -1,89 +1,79 @@
 import 'package:rfc_6901/src/bad_route.dart';
 import 'package:rfc_6901/src/json_pointer.dart';
-import 'package:rfc_6901/src/producer.dart';
 import 'package:rfc_6901/src/token/reference_failure.dart';
 import 'package:rfc_6901/src/token/reference_token.dart';
 
-class TokenChain implements JsonPointer {
-  TokenChain(this.token, {TokenChain? parent})
-      : parent = parent == null ? EmptyParent() : NonEmptyParent(parent);
+abstract class TokenChain implements JsonPointer {
+  @override
+  JsonPointer append(String token) => ChainElement(ReferenceToken(token), this);
+}
+
+class EmptyChain extends TokenChain {
+  @override
+  Object? read(Object? document, {Object? Function()? orElse}) => document;
+
+  @override
+  String toString() => '';
+
+  @override
+  Object? write(Object? document, Object? newValue) => newValue;
+
+  @override
+  Object? add(Object? document, Object? newValue) => newValue;
+
+  @override
+  Object? remove(doc) => null;
+}
+
+class ChainElement extends TokenChain {
+  ChainElement(this.token, this.parent);
 
   /// The rightmost reference token in the pointer
   final ReferenceToken token;
 
-  /// The rest of the chain except the last token.
-  final ParentChain parent;
+  final TokenChain parent;
 
   @override
-  Object? read(Object? document) {
-    final node = parent.read(document);
+  Object? read(Object? document, {Object? Function()? orElse}) {
+    final node = parent.read(document, orElse: orElse);
     try {
       return token.read(node);
     } on ReferenceFailure {
+      if (orElse != null) return orElse();
       throw BadRoute(this);
     }
   }
-
-  @override
-  void write(Object? document, Object? newValue) {
-    final node = parent.readOrCreate(document, token.createEmptyDocument);
-    try {
-      token.write(node, newValue);
-    } on ReferenceFailure {
-      throw BadRoute(this);
-    }
-  }
-
-  @override
-  JsonPointer append(String token) =>
-      TokenChain(ReferenceToken(token), parent: this);
-
-  @override
-  JsonPointer appendAll(Iterable<String> tokens) =>
-      tokens.fold(this, (pointer, token) => pointer.append(token));
 
   @override
   String toString() => '$parent$token';
 
-  Object? readOrCreate(Object? document, Producer producer) {
-    final node = parent.readOrCreate(document, token.createEmptyDocument);
+  @override
+  Object? write(Object? document, Object? newValue) {
+    final node = parent.read(document, orElse: token.createEmptyDocument);
     try {
-      return token.readOrCreate(node, producer);
+      return parent.write(document, token.write(node, newValue));
     } on ReferenceFailure {
       throw BadRoute(this);
     }
   }
-}
-
-abstract class ParentChain {
-  Object? read(Object? document);
-
-  Object? readOrCreate(Object? document, Producer producer);
-}
-
-class NonEmptyParent implements ParentChain {
-  NonEmptyParent(this.chain);
-
-  final TokenChain chain;
 
   @override
-  Object? read(Object? document) => chain.read(document);
+  Object? add(Object? document, Object? newValue) {
+    final node = parent.read(document);
+    try {
+      return parent.write(document, token.add(node, newValue));
+    } on ReferenceFailure {
+      throw BadRoute(this);
+    }
+  }
 
   @override
-  Object? readOrCreate(Object? document, producer) =>
-      chain.readOrCreate(document, producer);
-
-  @override
-  String toString() => chain.toString();
-}
-
-class EmptyParent implements ParentChain {
-  @override
-  Object? read(Object? document) => document;
-
-  @override
-  Object? readOrCreate(Object? document, producer) => document;
-
-  @override
-  String toString() => '';
+  Object? remove(Object? document) {
+    final node = parent.read(document);
+    try {
+      return parent.write(document, token.remove(node));
+    } on ReferenceFailure {
+      throw BadRoute(this);
+    }
+  }
 }

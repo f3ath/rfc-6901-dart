@@ -1,5 +1,4 @@
-import 'package:rfc_6901/src/object_member.dart';
-import 'package:rfc_6901/src/producer.dart';
+import 'package:rfc_6901/src/token/object_member.dart';
 
 /// A new element in a List
 class NewElement extends ObjectMember {
@@ -10,24 +9,13 @@ class NewElement extends ObjectMember {
   }
 
   @override
-  void write(document, value) {
+  Object? write(Object? document, Object? value) {
     if (document is List) {
-      document.add(value);
-    } else {
-      super.write(document, value);
+      return [...document, value];
     }
+    return super.write(document, value);
   }
 
   @override
   List createEmptyDocument() => [];
-
-  @override
-  Object? readOrCreate(Object? document, Producer producer) {
-    if (document is List) {
-      final value = producer();
-      document.add(value);
-      return value;
-    }
-    return super.readOrCreate(document, producer);
-  }
 }

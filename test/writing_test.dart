@@ -1,100 +1,90 @@
-import 'dart:convert';
-
 import 'package:rfc_6901/rfc_6901.dart';
 import 'package:test/test.dart';
 
+void write(Function() document, value,
+    {Map<String, Object?> results = const {},
+    Map<String, String> failures = const {}}) {
+  group('Writing "$value" to "${document()}"', () {
+    results.forEach((pointer, expected) {
+      test('At "$pointer" makes "$expected"', () {
+        final doc = document();
+        expect(JsonPointer(pointer).write(doc, value), equals(expected));
+        expect(doc, equals(document()));
+      });
+    });
+    failures.forEach((pointer, expected) {
+      test('At "$pointer" fails at "$expected"', () {
+        final doc = document();
+        expect(
+            () => JsonPointer(pointer).write(doc, value),
+            throwsA(predicate((e) =>
+                e is BadRoute &&
+                e.toString() == 'No value found at $expected')));
+        expect(doc, equals(document()));
+      });
+    });
+  });
+}
+
 void main() {
-  group('Writing', () {
-    Map? document;
-    setUp(() {
-      document = jsonDecode('{"foo": [{"bar": 42}]}');
-    });
+  write(() => 'foo', 42, results: {'': 42});
 
-    test('write on primitive throws InvalidRoute', () {
-      expect(
-          () => JsonPointer('/0').write('foo', 'bar'),
-          throwsA(predicate(
-              (e) => e is BadRoute && e.toString() == 'No value found at /0')));
-    });
+  write(() => [], 42, results: {
+    '/-': [42]
+  }, failures: {
+    '/foo': '/foo'
+  });
 
-    test('adding a key fails at arrays', () {
-      final doc = {'foo': []};
-      expect(() => JsonPointer('/foo/bar').write(doc, 'banana'),
-          throwsA((e) => e is BadRoute));
-    });
+  write(() => {}, 42, results: {
+    '/foo': {'foo': 42},
+    '/-': {'-': 42},
+    '/0': {'0': 42},
+    '/01': {'01': 42},
+    '/00': {'00': 42},
+  });
 
-    test('replace existing object member', () {
-      final p = JsonPointer('/foo/0/bar');
-      p.write(document, 'banana');
-      expect(p.read(document), 'banana');
-    });
+  write(
+      () => {
+            'foo': [
+              {'bar': 'baz'}
+            ]
+          },
+      42,
+      results: {
+        '/foo': {'foo': 42},
+        '/foo/0': {
+          'foo': [42]
+        },
+        '/foo/0/bar': {
+          'foo': [
+            {'bar': 42}
+          ]
+        },
+        '/foo/-/zzz': {
+          'foo': [
+            {'bar': 'baz'},
+            {'zzz': 42}
+          ]
+        },
+        '/foo/-/a/b/c': {
+          'foo': [
+            {'bar': 'baz'},
+            {
+              'a': {
+                'b': {'c': 42}
+              }
+            }
+          ]
+        },
+      });
 
-    test('create a new object member', () {
-      JsonPointer('/foo/0/baz').write(document, 'banana');
-      expect(JsonPointer('/foo/0/baz').read(document), 'banana');
-    });
-
-    test('replace existing array index', () {
-      JsonPointer('/foo/0').write(document, 'banana');
-      expect(JsonPointer('/foo/0').read(document), 'banana');
-    });
-
-    test('"-" at the end adds a new array element in array', () {
-      JsonPointer('/foo/-').write(document, 'banana');
-      expect(JsonPointer('/foo/1').read(document), 'banana');
-    });
-
-    test('"-" at the end adds a new member to an object', () {
-      JsonPointer('/-/foo').write(document, 'banana');
-      expect(JsonPointer('/-/foo').read(document), 'banana');
-    });
-
-    test('"-" at the end adds a new member to an object', () {
-      JsonPointer('/-').write(document, 'banana');
-      expect(JsonPointer('/-').read(document), 'banana');
-    });
-
-    test('/foo/- on {}', () {
-      final doc = {};
-      JsonPointer('/foo/-').write(doc, 'banana');
-      expect(JsonPointer('/foo/0').read(doc), 'banana');
-    });
-
-    test('/foo/-/bar on {}', () {
-      final doc = {};
-      JsonPointer('/foo/-/bar').write(doc, 'banana');
-      expect(JsonPointer('/foo/0/bar').read(doc), 'banana');
-    });
-
-    test('/foo/-/bar/baz on {}', () {
-      final doc = {};
-      JsonPointer('/foo/-/bar/baz').write(doc, 'banana');
-      expect(JsonPointer('/foo/0/bar/baz').read(doc), 'banana');
-    });
-
-    test('/0/-/-/bar on [[]]', () {
-      final doc = [[]];
-      JsonPointer('/0/-/-/bar').write(doc, 'banana');
-      expect(JsonPointer('/0/0/0/bar').read(doc), 'banana');
-    });
-
-    test('/0/0/0/bar on {}', () {
-      final doc = {};
-      JsonPointer('/0/0/0/bar').write(doc, 'banana');
-      expect(JsonPointer('/0/0/0/bar').read(doc), 'banana');
-    });
-
-    test('/foo/-/bar/baz on "" throws', () {
-      final doc = '';
-      expect(() => JsonPointer('/foo/-/bar/baz').write(doc, 'banana'),
-          throwsA((e) => e is BadRoute));
-    });
-
-    test('/foo/3/bar throws (missing index)', () {
-      expect(
-          () => JsonPointer('/foo/3/bar').write(document, 'banana'),
-          throwsA(predicate((e) =>
-              e is BadRoute && e.toString() == 'No value found at /foo/3')));
-    });
+  write(() => {}, 42, results: {
+    '/a/-/0/b': {
+      'a': [
+        {
+          '0': {'b': 42}
+        }
+      ]
+    }
   });
 }
