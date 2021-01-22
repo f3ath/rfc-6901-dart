@@ -20,7 +20,8 @@ class TokenChain implements JsonPointer {
   Object? remove(doc) => null;
 
   @override
-  JsonPointer appendToken(String token) => ChainElement(ReferenceToken(token), this);
+  JsonPointer appendToken(String token) =>
+      ChainElement(ReferenceToken(token), this);
 }
 
 class ChainElement extends TokenChain {
