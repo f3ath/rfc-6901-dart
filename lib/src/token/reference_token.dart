@@ -38,7 +38,7 @@ abstract class ReferenceToken {
   Object? add(Object? document, Object? newValue);
 
   /// Returns a copy of the [document] with the referenced value removed.
-  /// When an existing [Map] (JSON Object) key is referred, it will be added removed from the map.
+  /// When an existing [Map] (JSON Object) key is referred, it will be removed from the map.
   /// When an existing index in a [List] (JSON Array) is referred,
   /// it will be removed and the elements above the index will be shifted to the left.
   /// Otherwise throws [ReferenceFailure].
