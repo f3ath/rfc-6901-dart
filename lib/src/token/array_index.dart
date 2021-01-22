@@ -36,7 +36,7 @@ class ArrayIndex extends ObjectMember {
 
   @override
   Object? add(Object? document, Object? value) {
-    if (document is List && _applicableTo(document)) {
+    if (document is List && index >= 0 && index <= document.length) {
       return [...document]..insert(index, value);
     }
     return super.add(document, value);
