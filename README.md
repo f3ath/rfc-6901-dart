@@ -20,15 +20,15 @@ JsonPointer(''); // throws a FormatException: expression doesn't start with "/" 
 JsonPointer('/foo/~'); // throws a FormatException: unescaped "~'
 ```
 
-It can also be built from individual reference tokens. In such case, it will escape the segments
-automatically. Note how `bar/` gets turned into `bar~1`.
+It can also be built from individual reference tokens. In such case, it will escape the tokens automatically.
 ```dart
-// Produces "/foo/0/bar~1"
-final pointerFromSegments = JsonPointer.fromToken('foo', ['0', 'bar/']);
-
+final pointer = JsonPointer.build(['foo', '0', 'bar/']); // Makes "/foo/0/bar~1"
+final longerPointer = pointer.appendToken('-'); // Makes "/foo/0/bar~1/-"
 ```
 
 ## Reading and writing values
+The `read()` method returns the referenced value. The `write()` method returns a copy of the document with 
+the referenced value replaced by the new value.
 ```dart
 import 'dart:convert';
 
@@ -47,24 +47,16 @@ void main() {
     print('Pointer "$pointer" reads ${pointer.read(document)}');
   });
 
-  // Let's replace 42 with 'hello'
-  final bar = JsonPointer('/foo/0/bar');
-  bar.write(document, 'hello');
-  // The document is {foo: [{bar: hello}]}
-  print('Pointer "$bar" can replace 42 with "hello": $document');
-  
-  // Now let's add a new element to the array
-  final newElement = JsonPointer('/foo/-');
-  newElement.write(document, 'banana');
-  // The document is {foo: [{bar: hello}, banana]}
-  print('Pointer "$newElement" adds a banana: $document');
-
-  // Now let's add an entire path to the document
-  final longPath = JsonPointer('/a/b/-/c/d');
-  longPath.write(document, 'wow');
-  // The document is {foo: [{bar: hello}, banana], a: {b: [{c: {d: wow}}]}}
-  print('Pointer "$longPath" creates a new path: $document');
+  [
+    '/foo/0/bar', // {foo: [{bar: banana}]}
+    '/foo/-', // {foo: [{bar: 42}, banana]}
+    '/a/b/-/c/d', // {foo: [{bar: 42}], a: {b: [{c: {d: banana}}]}}
+  ].map((expression) => JsonPointer(expression)).forEach((pointer) {
+    final d = pointer.write(document, 'banana');
+    print('Add a banana at "$pointer": $d');
+  });
 }
+
 ```
 
 [RFC 6901]: https://tools.ietf.org/html/rfc6901
