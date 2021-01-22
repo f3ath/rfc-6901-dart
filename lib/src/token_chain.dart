@@ -3,12 +3,7 @@ import 'package:rfc_6901/src/json_pointer.dart';
 import 'package:rfc_6901/src/token/reference_failure.dart';
 import 'package:rfc_6901/src/token/reference_token.dart';
 
-abstract class TokenChain implements JsonPointer {
-  @override
-  JsonPointer append(String token) => ChainElement(ReferenceToken(token), this);
-}
-
-class EmptyChain extends TokenChain {
+class TokenChain implements JsonPointer {
   @override
   Object? read(Object? document, {Object? Function()? orElse}) => document;
 
@@ -23,6 +18,9 @@ class EmptyChain extends TokenChain {
 
   @override
   Object? remove(doc) => null;
+
+  @override
+  JsonPointer appendToken(String token) => ChainElement(ReferenceToken(token), this);
 }
 
 class ChainElement extends TokenChain {

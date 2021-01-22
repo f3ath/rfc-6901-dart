@@ -12,7 +12,7 @@ abstract class JsonPointer {
   /// final pointer = JsonPointer('/foo/bar');
   /// ```
   factory JsonPointer([String expression = '']) {
-    if (expression.isEmpty) return EmptyChain();
+    if (expression.isEmpty) return TokenChain();
     final errors = validate(expression);
     if (errors.isNotEmpty) throw FormatException(errors.join(' '));
     return build(expression.split('/').skip(1).map(ReferenceToken.unescape));
@@ -20,7 +20,7 @@ abstract class JsonPointer {
 
   /// Creates a new JSON Pointer from [tokens].
   static JsonPointer build(Iterable<String> tokens) =>
-      tokens.fold(EmptyChain(), (chain, token) => chain.append(token));
+      tokens.fold(TokenChain(), (chain, token) => chain.appendToken(token));
 
   /// Reads the referenced value from the [document].
   /// If no value is referenced, returns the result of [orElse] or throws [BadRoute].
@@ -76,5 +76,5 @@ abstract class JsonPointer {
 
   /// Creates a new JSON Pointer by appending
   /// the unescaped [token] at the end of the expression.
-  JsonPointer append(String token);
+  JsonPointer appendToken(String token);
 }
