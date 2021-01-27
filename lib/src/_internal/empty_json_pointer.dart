@@ -1,7 +1,10 @@
 import 'package:rfc_6901/src/json_pointer.dart';
 
-class EmptyPointer implements JsonPointer {
-  const EmptyPointer();
+/// The empty JSON Pointer
+class EmptyJsonPointer implements JsonPointer {
+  factory EmptyJsonPointer() => const EmptyJsonPointer._();
+
+  const EmptyJsonPointer._();
 
   @override
   final parent = null;

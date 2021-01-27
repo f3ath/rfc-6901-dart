@@ -1,7 +1,7 @@
-import 'package:rfc_6901/src/_internal/empty_pointer.dart';
-import 'package:rfc_6901/src/_internal/pointer_segment.dart';
+import 'package:rfc_6901/src/_internal/empty_json_pointer.dart';
 import 'package:rfc_6901/src/_internal/reference.dart';
 import 'package:rfc_6901/src/bad_route.dart';
+import 'package:rfc_6901/src/json_pointer_segment.dart';
 
 /// A JSON Pointer [RFC 6901](https://tools.ietf.org/html/rfc6901).
 abstract class JsonPointer {
@@ -12,40 +12,36 @@ abstract class JsonPointer {
   /// final pointer = JsonPointer('/foo/bar');
   /// ```
   factory JsonPointer([String expression = '']) {
-    if (expression.isEmpty) return _empty;
-    validate(expression);
+    if (expression.isEmpty) return EmptyJsonPointer();
+    _validate(expression);
     return build(expression.split('/').skip(1).map(Reference.unescape));
   }
 
   /// Creates a new JSON Pointer from reference [tokens].
-  static JsonPointer build(Iterable<String> tokens) => append(_empty, tokens);
-
-  /// Creates a new JSON Pointer by appending [tokens] to another [pointer].
-  static JsonPointer append(JsonPointer pointer, Iterable<String> tokens) =>
-      tokens
-          .map((token) => Reference(token))
-          .fold(pointer, (parent, ref) => PointerSegment(ref, parent));
+  static JsonPointer build(Iterable<String> tokens) => tokens.fold(
+      EmptyJsonPointer(), (parent, token) => JsonPointerSegment(token, parent));
 
   /// Throws a [FormatException] if the [expression] is not valid.
-  static void validate(String expression) {
+  static void _validate(String expression) {
     if (expression.isEmpty) return;
-    final errors = <String>[];
-    if (!expression.startsWith('/')) {
-      errors.add('Expression MUST start with "/".');
-    }
-    if (_danglingTilda.hasMatch(expression)) {
-      errors.add('Tilda("~") MUST be followed by "0" or "1".');
-    }
+    final errors = _errors(expression);
     if (errors.isNotEmpty) throw FormatException(errors.join(' '));
   }
 
-  /// Empty JSON Pointer
-  static const _empty = EmptyPointer();
+  /// Returns errors found in the non-empty [expression]
+  static Iterable<String> _errors(String expression) sync* {
+    if (!expression.startsWith('/')) {
+      yield 'Expression MUST start with "/".';
+    }
+    if (_danglingTilda.hasMatch(expression)) {
+      yield 'Tilda("~") MUST be followed by "0" or "1".';
+    }
+  }
 
   /// Represents a tilda with is not followed by "0" or "1"
   static final _danglingTilda = RegExp(r'~[^01]|~$');
 
-  /// The parent pointer.
+  /// The parent pointer. In the empty pointer this property is `null`.
   JsonPointer? get parent;
 
   /// Reads the referenced value from the [document].

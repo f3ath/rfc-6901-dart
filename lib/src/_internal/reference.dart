@@ -3,9 +3,9 @@ import 'package:rfc_6901/src/_internal/new_element.dart';
 import 'package:rfc_6901/src/_internal/object_member.dart';
 import 'package:rfc_6901/src/_internal/reference_failure.dart';
 
-/// A single JSON Pointer reference token
+/// A single JSON Pointer reference
 abstract class Reference {
-  /// Creates a new instance from an unescaped expression.
+  /// Creates a new instance from an unescaped token.
   factory Reference(String token) =>
       NewElement.tryParse(token) ??
       ArrayIndex.tryParse(token) ??
