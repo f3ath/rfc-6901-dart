@@ -25,7 +25,10 @@ abstract class JsonPointer {
   static void _validate(String expression) {
     if (expression.isEmpty) return;
     final errors = _errors(expression);
-    if (errors.isNotEmpty) throw FormatException(errors.join(' '));
+    if (errors.isNotEmpty) {
+      throw FormatException(
+          'Invalid JSON Pointer "$expression". ' + errors.join(' '));
+    }
   }
 
   /// Returns errors found in the non-empty [expression]
@@ -99,4 +102,7 @@ abstract class JsonPointer {
   /// Returns the string representation of the pointer.
   @override
   String toString();
+
+  /// Returns the string representation of the pointer.
+  String toJson();
 }

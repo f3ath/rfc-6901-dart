@@ -1,7 +1,8 @@
+import 'package:rfc_6901/src/_internal/encoding_mixin.dart';
 import 'package:rfc_6901/src/json_pointer.dart';
 
 /// The empty JSON Pointer
-class EmptyJsonPointer implements JsonPointer {
+class EmptyJsonPointer with Encoding implements JsonPointer {
   factory EmptyJsonPointer() => const EmptyJsonPointer._();
 
   const EmptyJsonPointer._();

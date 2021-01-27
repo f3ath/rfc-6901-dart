@@ -1,10 +1,11 @@
+import 'package:rfc_6901/src/_internal/encoding_mixin.dart';
 import 'package:rfc_6901/src/_internal/reference.dart';
 import 'package:rfc_6901/src/_internal/reference_failure.dart';
 import 'package:rfc_6901/src/bad_route.dart';
 import 'package:rfc_6901/src/json_pointer.dart';
 
 /// JSON Pointer containing at least one reference
-class JsonPointerSegment implements JsonPointer {
+class JsonPointerSegment with Encoding implements JsonPointer {
   JsonPointerSegment(String token, this.parent) : _reference = Reference(token);
 
   @override
