@@ -1,15 +1,15 @@
-import 'package:rfc_6901/src/token/array_index.dart';
-import 'package:rfc_6901/src/token/new_element.dart';
-import 'package:rfc_6901/src/token/object_member.dart';
-import 'package:rfc_6901/src/token/reference_failure.dart';
+import 'package:rfc_6901/src/_internal/array_index.dart';
+import 'package:rfc_6901/src/_internal/new_element.dart';
+import 'package:rfc_6901/src/_internal/object_member.dart';
+import 'package:rfc_6901/src/_internal/reference_failure.dart';
 
 /// A single JSON Pointer reference token
-abstract class ReferenceToken {
+abstract class Reference {
   /// Creates a new instance from an unescaped expression.
-  factory ReferenceToken(String unescapedExpression) =>
-      NewElement.tryParse(unescapedExpression) ??
-      ArrayIndex.tryParse(unescapedExpression) ??
-      ObjectMember(unescapedExpression);
+  factory Reference(String token) =>
+      NewElement.tryParse(token) ??
+      ArrayIndex.tryParse(token) ??
+      ObjectMember(token);
 
   /// Escapes a JSON Pointer token
   static String escape(String unescaped) =>
@@ -45,5 +45,5 @@ abstract class ReferenceToken {
   Object? remove(Object? document);
 
   /// Creates an empty document for which this reference is applicable.
-  Object createEmptyDocument();
+  Object emptyDocument();
 }

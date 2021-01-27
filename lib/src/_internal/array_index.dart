@@ -1,4 +1,4 @@
-import 'package:rfc_6901/src/token/object_member.dart';
+import 'package:rfc_6901/src/_internal/object_member.dart';
 
 /// A reference to a value in a List or Map
 class ArrayIndex extends ObjectMember {

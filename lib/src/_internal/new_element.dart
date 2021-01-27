@@ -1,8 +1,8 @@
-import 'package:rfc_6901/src/token/object_member.dart';
+import 'package:rfc_6901/src/_internal/object_member.dart';
 
 /// A new element in a List
 class NewElement extends ObjectMember {
-  NewElement() : super('-');
+  const NewElement() : super('-');
 
   static NewElement? tryParse(String unescapedExpression) {
     if (unescapedExpression == '-') return NewElement();
@@ -17,5 +17,5 @@ class NewElement extends ObjectMember {
   }
 
   @override
-  List createEmptyDocument() => [];
+  List emptyDocument() => [];
 }

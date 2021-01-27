@@ -1,12 +1,11 @@
-import 'package:rfc_6901/src/token/reference_failure.dart';
-import 'package:rfc_6901/src/token/reference_token.dart';
+import 'package:rfc_6901/src/_internal/reference.dart';
+import 'package:rfc_6901/src/_internal/reference_failure.dart';
 
 /// An object member
-class ObjectMember implements ReferenceToken {
-  ObjectMember(this.token) : asString = '/' + ReferenceToken.escape(token);
+class ObjectMember implements Reference {
+  const ObjectMember(this.token);
 
   final String token;
-  final String asString;
 
   @override
   Object? read(document) {
@@ -36,8 +35,8 @@ class ObjectMember implements ReferenceToken {
   }
 
   @override
-  String toString() => asString;
+  String toString() => Reference.escape(token);
 
   @override
-  Object createEmptyDocument() => {};
+  Object emptyDocument() => {};
 }
