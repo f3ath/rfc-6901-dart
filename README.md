@@ -4,7 +4,7 @@ JSON Pointer ([RFC 6901]) implementation in Dart.
 Features:
 - Reads, writes, removes values
 - Fully implements the standard, including the `-` character
-- Can build an entire path, e.g. `/foo/bar/-/baz`
+- Can build the entire path, e.g. `/foo/bar/-/baz`
 - No external dependencies
 - 100% test coverage
 
