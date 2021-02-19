@@ -1,6 +1,6 @@
 import 'package:rfc_6901/src/json_pointer.dart';
 
-/// Exception thrown when a JSON Pointer references the value which does not
+/// Exception thrown when a JSON Pointer references a value which does not
 /// exist in the document.
 class BadRoute implements Exception {
   BadRoute(this.pointer, this.document);
