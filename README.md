@@ -17,7 +17,7 @@ final alsoPointer = JsonPointer('/foo/-'); // a valid non-empty pointer with a s
 final emptyPointer = JsonPointer(); // an empty pointer
 
 JsonPointer('oops'); // throws a FormatException: expression doesn't start with "/"
-JsonPointer('/foo/~'); // throws a FormatException: unescaped "~'
+JsonPointer('/foo/~'); // throws a FormatException: unescaped "~"
 ```
 
 It can also be built from individual reference tokens. In such case, it will escape the tokens automatically.
