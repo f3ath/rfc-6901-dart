@@ -6,14 +6,15 @@ class NewElement extends ObjectMember {
 
   static NewElement? tryParse(String unescapedExpression) {
     if (unescapedExpression == '-') return NewElement();
+    return null;
   }
 
   @override
-  Object? write(Object? document, Object? value) {
+  Object? write(Object? document, Object? newValue) {
     if (document is List) {
-      return [...document, value];
+      return [...document, newValue];
     }
-    return super.write(document, value);
+    return super.write(document, newValue);
   }
 
   @override
