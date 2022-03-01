@@ -1,4 +1,4 @@
-include: package:pedantic/analysis_options.yaml
+include: package:lints/analysis_options.yaml
 linter:
   rules:
     - sort_constructors_first
