@@ -9,6 +9,7 @@ class ArrayIndex extends ObjectMember {
     if (regex.hasMatch(unescapedExpression)) {
       return ArrayIndex(int.parse(unescapedExpression));
     }
+    return null;
   }
 
   /// Array index regex. An array index MUST be either "0" or an unsigned
@@ -27,19 +28,19 @@ class ArrayIndex extends ObjectMember {
   }
 
   @override
-  Object? write(Object? document, Object? value) {
+  Object? write(Object? document, Object? newValue) {
     if (document is List && _applicableTo(document)) {
-      return [...document]..[index] = value;
+      return [...document]..[index] = newValue;
     }
-    return super.write(document, value);
+    return super.write(document, newValue);
   }
 
   @override
-  Object? add(Object? document, Object? value) {
+  Object? add(Object? document, Object? newValue) {
     if (document is List && index >= 0 && index <= document.length) {
-      return [...document]..insert(index, value);
+      return [...document]..insert(index, newValue);
     }
-    return super.add(document, value);
+    return super.add(document, newValue);
   }
 
   @override
