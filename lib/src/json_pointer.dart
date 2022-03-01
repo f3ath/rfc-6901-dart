@@ -103,14 +103,6 @@ abstract class JsonPointer {
   @override
   String toString();
 
-  /// Compares the pointers paths for equality
-  @override
-  bool operator ==(otherPointer);
-
-  /// hashCode of the given path determines equality
-  @override
-  int get hashCode;
-
   /// Returns the string representation of the pointer.
   String toJson();
 }
