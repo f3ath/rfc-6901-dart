@@ -54,6 +54,15 @@ class JsonPointerSegment with Encoding implements JsonPointer {
     }
   }
 
+  /// hashCode of the given path determines equality
+  @override
+  int get hashCode => toString().hashCode;
+
+  /// Compares the pointer paths for equality
+  @override
+  bool operator ==(otherPointer) =>
+      otherPointer is JsonPointer && toString() == otherPointer.toString();
+
   @override
   String toString() => '$parent/$_reference';
 }
