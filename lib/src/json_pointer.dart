@@ -83,8 +83,6 @@ abstract class JsonPointer {
   ///
   /// If any of the intermediate keys and indexes is missing, a [BadRoute] exception
   /// will be thrown.
-  ///
-  /// If the referenced value
   Object? add(Object? document, Object? newValue);
 
   /// Returns a copy of [document] with the value at the referenced location removed.
