@@ -41,7 +41,7 @@ abstract class JsonPointer {
     }
   }
 
-  /// Represents a tilda with is not followed by "0" or "1"
+  /// Represents a tilda which is not followed by "0" or "1"
   static final _danglingTilda = RegExp(r'~[^01]|~$');
 
   /// The parent pointer. In the empty pointer this property is `null`.
