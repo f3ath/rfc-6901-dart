@@ -94,7 +94,7 @@ abstract class JsonPointer {
   ///
   /// The target location must exist, otherwise [BadRoute] will be thrown.
   /// If the target location specifies an array index, the value at the index is removed
-  /// and the element above the index are shifted to the left.
+  /// and the elements with higher indexes are shifted to the left.
   Object? remove(Object? document);
 
   /// Returns the string representation of the pointer.
