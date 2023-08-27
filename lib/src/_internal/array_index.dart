@@ -5,12 +5,10 @@ class ArrayIndex extends ObjectMember {
   ArrayIndex(this.index) : super(index.toString());
 
   /// Returns an instance of ArrayIndex if it can be parsed from the [unescapedExpression].
-  static ArrayIndex? tryParse(String unescapedExpression) {
-    if (regex.hasMatch(unescapedExpression)) {
-      return ArrayIndex(int.parse(unescapedExpression));
-    }
-    return null;
-  }
+  static ArrayIndex? tryParse(String unescapedExpression) =>
+      regex.hasMatch(unescapedExpression)
+          ? ArrayIndex(int.parse(unescapedExpression))
+          : null;
 
   /// Array index regex. An array index MUST be either "0" or an unsigned
   /// base-10 integer starting with a non-zero digit.
@@ -20,12 +18,10 @@ class ArrayIndex extends ObjectMember {
   final int index;
 
   @override
-  Object? read(Object? document) {
-    if (document is List && _applicableTo(document)) {
-      return document[index];
-    }
-    return super.read(document);
-  }
+  Object? read(Object? document) =>
+      (document is List && _applicableTo(document))
+          ? document[index]
+          : super.read(document);
 
   @override
   Object? write(Object? document, Object? newValue) {
