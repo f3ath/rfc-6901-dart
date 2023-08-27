@@ -27,17 +27,17 @@ abstract class JsonPointer {
     final errors = _errors(expression);
     if (errors.isNotEmpty) {
       throw FormatException(
-          'Invalid JSON Pointer "$expression". ' + errors.join(' '));
+          'Invalid JSON Pointer "$expression": ' + errors.join(', ') + '.');
     }
   }
 
   /// Returns errors found in the non-empty [expression]
   static Iterable<String> _errors(String expression) sync* {
     if (!expression.startsWith('/')) {
-      yield 'Expression MUST start with "/".';
+      yield 'expression MUST start with "/"';
     }
     if (_danglingTilda.hasMatch(expression)) {
-      yield 'Tilda("~") MUST be followed by "0" or "1".';
+      yield 'tilda ("~") MUST be followed by "0" or "1"';
     }
   }
 
