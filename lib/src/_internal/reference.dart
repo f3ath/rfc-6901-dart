@@ -21,7 +21,7 @@ abstract class Reference {
 
   /// Reads the referenced value from the [document].
   /// If no value is referenced, throws [ReferenceFailure].
-  Object? read(document);
+  Object? read(Object? document);
 
   /// Returns a copy of the [document] with the referenced value set to [newValue].
   /// When a non-existing [Map] (JSON Object) key is referred, it will be added to the map.
