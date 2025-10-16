@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:rfc_6901/rfc_6901.dart';
 import 'package:test/test.dart';
 
-void read(document,
+void read(Object? document,
     {Map<String, Object?> results = const {},
     Map<String, String> failures = const {}}) {
   group('Reading document "$document"', () {

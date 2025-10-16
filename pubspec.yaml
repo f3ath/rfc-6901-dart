@@ -1,5 +1,5 @@
 name: rfc_6901
-version: 0.2.0
+version: 0.2.1
 description: JSON Pointer (RFC 6901). Reads/writes referred values in JSON documents.
 homepage: "https://github.com/f3ath/rfc-6901-dart"
 
@@ -7,7 +7,7 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
 
 dev_dependencies:
-  lints: ^1.0.1
+  lints: ^6.0.0
   test: ^1.20.1
   check_coverage: ^0.0.4
 
