@@ -27,7 +27,7 @@ abstract class JsonPointer {
     final errors = _errors(expression);
     if (errors.isNotEmpty) {
       throw FormatException(
-          'Invalid JSON Pointer "$expression": ' + errors.join(', ') + '.');
+          'Invalid JSON Pointer "$expression": ${errors.join(', ')}.');
     }
   }
 
